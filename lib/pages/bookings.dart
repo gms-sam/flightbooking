@@ -24,12 +24,20 @@ class _BookingState extends State<Booking> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        decoration: BoxDecoration(border: Border.all(color: Colors.black),borderRadius: BorderRadius.circular(15)),
         padding: EdgeInsets.all(20),
         margin: EdgeInsets.all(20),
-        child: Column(
-          children: [
-           Text(from.toString())
-          ],
+        child: ListTile(
+          title: Text("Mumbai To Delhi",style: TextStyle(fontSize: 20),),
+          subtitle: Text("18/12/2021"),
+          trailing: IconButton(onPressed: ()async{
+            setState(() {
+              FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
+              flutterSecureStorage.delete(key: "from");
+              flutterSecureStorage.delete(key: "to");
+              flutterSecureStorage.delete(key: "date");
+            });
+          }, icon: Icon(Icons.delete)),
         )
       ),
     );

@@ -1,4 +1,8 @@
 // ignore: file_names
+
+
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flightbooking/locator.dart';
@@ -6,7 +10,9 @@ import 'package:flightbooking/models/user_model.dart';
 import 'package:flightbooking/services/authenticationServices.dart';
 import 'package:flightbooking/signIn%20and%20SignUp/signIn.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:image_picker/image_picker.dart';
 
 class SignUp extends StatefulWidget {
   @override
@@ -36,14 +42,15 @@ class _SignUpState extends State<SignUp> {
               children: [
                 SizedBox(height: 60,),
                 InkWell(
-                  onTap: (){},
+                  onTap: (){pickImage();},
                   child: Container(
                     height: 80,
                     width: 80,
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(50)
-                    ),
+                    // decoration: BoxDecoration(
+                    //  // color: Colors.black,
+                    //   borderRadius: BorderRadius.circular(50)
+                    // ),
+                    child: image!=null?Image.file(image!):Image.network("https://cdn3.iconfinder.com/data/icons/photo-tools/65/select-512.png"),
                   ),
                 ),
                 SizedBox(height: 20,),
@@ -281,5 +288,18 @@ class _SignUpState extends State<SignUp> {
   void navigateToSignIn() {
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => SignIn()));
+  }
+  File? image;
+  Future pickImage() async{
+   try{
+     final image =  await ImagePicker().pickImage(source: ImageSource.gallery);
+   if(image == null)return;
+   final imageTemporary = File(image.path);
+   setState(() {
+     this.image = imageTemporary;
+   });
+   }on PlatformException catch(e){
+     print("Failed to pick image : $e");
+   }
   }
 }
